@@ -4,20 +4,17 @@
 
     public class DependencyProperty
     {
-        public static DependencyProperty Register(string name, ValidateValueCallback validateValueCallback = null)
+        public static DependencyProperty Register(string name)
         {
             DependencyProperty dependencyProperty = new DependencyProperty
             {
-                Name = name,
-                ValidateValueCallback = validateValueCallback
+                Name = name
             };
 
             return dependencyProperty;
         }
 
         public string Name { get; private set; }
-
-        protected ValidateValueCallback ValidateValueCallback { get; private set; }
 
         private DependencyProperty()
         {

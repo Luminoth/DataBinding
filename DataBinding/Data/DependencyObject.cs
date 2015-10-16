@@ -21,30 +21,29 @@ namespace DataBinding.Data
             bindingValue = bindingValue.Substring(1, bindingValue.Length - 2).Trim();
 
             string[] scratch = bindingValue.Split('.');
-            if(0 == scratch.Length || scratch.Length > 2) {
+            if(0 == scratch.Length) {
                 return false;
             }
 
-            if(scratch.Length > 1) {
-                PropertyInfo propertyInfo = owner.GetType().GetProperty(scratch[0].Trim());
+            object source = owner;
+            int propertyIndex = 0;
+
+            for(int i=0; i<scratch.Length-1; ++i) {
+                PropertyInfo propertyInfo = source.GetType().GetProperty(scratch[i].Trim());
                 if(null == propertyInfo) {
                     return false;
                 }
 
-                SetBinding(dependencyProperty, new Binding
-                    {
-                        Source = propertyInfo.GetValue(owner, null),
-                        SourceProperty = scratch[1].Trim()
-                    }
-                );
-            } else {
-                SetBinding(dependencyProperty, new Binding
-                    {
-                        Source = owner,
-                        SourceProperty = scratch[0].Trim()
-                    }
-                );
+                source = propertyInfo.GetValue(source, null);
+                propertyIndex = i+1;
             }
+
+            SetBinding(dependencyProperty, new Binding
+                {
+                    Source = source,
+                    SourceProperty = scratch[propertyIndex].Trim()
+                }
+            );
 
             return true;
         }
