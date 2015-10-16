@@ -7,19 +7,21 @@ namespace DataBinding
 {
     internal class Program
     {
-        private static readonly Dictionary<string, string> TestDict = new Dictionary<string, string>
-        {
-            { "Type", "TextEdit" },
-            { "Text", "{model.Name}" }
-        };
-
         public static void Main(string[] args)
         {
-            TestNoBinding();
-            TestBinding();
+            Program program = new Program();
+
+            program.TestNoBinding();
+            program.TestBinding();
+            program.TestDictBindingString();
+            program.TestDictBindingPropertyString();
         }
 
-        public static void TestNoBinding()
+        public string TestText { get; set; } = string.Empty;
+
+        public Model MyModel { get; set; } = new Model();
+
+        public void TestNoBinding()
         {
             Model model = new Model
             {
@@ -37,7 +39,7 @@ namespace DataBinding
             Console.WriteLine($"Text edit value after: {textEdit.Text} (expecting 'Bound')");
         }
 
-        public static void TestBinding()
+        public void TestBinding()
         {
             Model model = new Model
             {
@@ -60,6 +62,38 @@ namespace DataBinding
             Console.WriteLine($"Text edit value before: {textEdit.Text} (expecting 'Bound')");
             model.Name = "TwoWayBound";
             Console.WriteLine($"Text edit value after: {textEdit.Text} (expecting 'TwoWayBound')");
+        }
+
+        public void TestDictBindingString()
+        {
+            var dict = new Dictionary<string, string>
+            {
+                { "Type", "TextEdit" },
+                { "Text", "{TestText}" }
+            };
+
+            TextEdit textEdit = new TextEdit();
+            textEdit.BuildFromDict(this, dict);
+
+            Console.WriteLine($"String before: {TestText} (expected '')");
+            textEdit.Text = "Bound";
+            Console.WriteLine($"String after: {TestText} (expected 'Bound')");
+        }
+
+        public void TestDictBindingPropertyString()
+        {
+            var dict = new Dictionary<string, string>
+            {
+                { "Type", "TextEdit" },
+                { "Text", "{MyModel.Name}" }
+            };
+
+            TextEdit textEdit = new TextEdit();
+            textEdit.BuildFromDict(this, dict);
+
+            Console.WriteLine($"Model name before: {MyModel.Name} (expected '')");
+            textEdit.Text = "Bound";
+            Console.WriteLine($"Model name after: {MyModel.Name} (expected 'Bound')");
         }
     }
 }

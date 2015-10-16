@@ -1,4 +1,6 @@
-﻿using DataBinding.Data;
+﻿using System.Collections.Generic;
+
+using DataBinding.Data;
 
 namespace DataBinding
 {
@@ -27,6 +29,16 @@ namespace DataBinding
                     SourceProperty = "Text"
                 }
             );
+        }
+
+        public override void BuildFromDict(object parent, Dictionary<string, string> dict)
+        {
+            string value;
+            if(dict.TryGetValue("Text", out value)) {
+                if(!SetBinding(TextProperty, parent, value)) {
+                    Text = value;
+                }
+            }
         }
     }
 }
