@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace DataBinding.Data
 {
@@ -30,7 +31,11 @@ namespace DataBinding.Data
             if(null == propertyInfo) {
                 return;
             }
-            propertyInfo.SetValue(Source, value, null);
+
+            try {
+                propertyInfo.SetValue(Source, Convert.ChangeType(value, propertyInfo.PropertyType), null);
+            } catch(FormatException) {
+            }
         }
     }
 }

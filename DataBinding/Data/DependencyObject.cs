@@ -28,14 +28,28 @@ namespace DataBinding.Data
             object source = owner;
             int propertyIndex = 0;
 
+            string propertyName;
+            PropertyInfo propertyInfo;
             for(int i=0; i<scratch.Length-1; ++i) {
-                PropertyInfo propertyInfo = source.GetType().GetProperty(scratch[i].Trim());
+                propertyName = scratch[i].Trim();
+
+                propertyInfo = source.GetType().GetProperty(propertyName);
                 if(null == propertyInfo) {
                     return false;
                 }
 
                 source = propertyInfo.GetValue(source, null);
+                if(null == source) {
+                    return false;
+                }
+
                 propertyIndex = i+1;
+            }
+
+            propertyName = scratch[propertyIndex].Trim();
+            propertyInfo = source.GetType().GetProperty(propertyName);
+            if(null == propertyInfo) {
+                return false;
             }
 
             SetBinding(dependencyProperty, new Binding

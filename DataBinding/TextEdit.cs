@@ -6,7 +6,7 @@ namespace DataBinding
 {
     public class TextEdit : Control
     {
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text");
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(TextEdit));
 
         private class DefaultModel
         {
